@@ -1,4 +1,132 @@
+basePath: /to-do
+definitions:
+  models.Todo:
+    properties:
+      id:
+        type: integer
+      nama:
+        type: string
+      selesai:
+        type: boolean
+    type: object
+host: localhost:8080
 info:
-  contact: {}
-paths: {}
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Ini adalah contoh Aplikasi ToDo - Rest API.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: ToDo Apps - Rest API
+  version: "1.0"
+paths:
+  /to-do:
+    get:
+      description: Menampilkan semua daftar data ToDo
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Todo'
+            type: array
+      summary: Menampilkan semua ToDo
+      tags:
+      - to-do
+    post:
+      consumes:
+      - application/json
+      description: Menambahkan satu data ToDo baru
+      parameters:
+      - description: Buat Todo
+        in: body
+        name: todo
+        required: true
+        schema:
+          $ref: '#/definitions/models.Todo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Todo'
+      summary: Menambahkan ToDo Baru
+      tags:
+      - to-do
+  /to-do/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Menghapus ToDo yang sudah ada
+      parameters:
+      - description: Hapus ToDo
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Todo'
+      summary: Menghapus ToDo
+      tags:
+      - to-do
+    get:
+      consumes:
+      - application/json
+      description: Menampilkan sebuah data ToDo berdasarkan Id yang dimasukkan
+      parameters:
+      - description: Ambil By Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Todo'
+      summary: Menampilkan sebuah data ToDo
+      tags:
+      - to-do
+    put:
+      consumes:
+      - application/json
+      description: Mengubah ToDo yang sudah ada
+      parameters:
+      - description: Ubah ToDo
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: minta data json
+        in: body
+        name: todo
+        required: true
+        schema:
+          $ref: '#/definitions/models.Todo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Todo'
+      summary: Mengubah ToDo
+      tags:
+      - to-do
+securityDefinitions:
+  BasicAuth:
+    type: basic
 swagger: "2.0"

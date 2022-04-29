@@ -14,26 +14,44 @@ var (
 	counter int
 )
 
-type InputModels struct {
-	Id       int    `json:"id"`
-	Nama     string `json:"nama"`
-	Complete bool   `json:"complete"`
+type todoModels struct {
+	Id      int    `json:"id"`
+	Nama    string `json:"nama"`
+	Selesai bool   `json:"Selesai"`
 }
 
-// swagger
+// @Tags to-do
+// @Summary Menampilkan semua ToDo
+// @Description Menampilkan semua daftar data ToDo
+// @Produce json
+// @Success 200 {array} models.Todo
+// @Router /to-do [get]
 func AmbilAll(c *gin.Context) {
-	c.JSON(http.StatusOK, todos)
+	if todos != [] {
+		c.JSON(http.StatusOK, todos)
+		return
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{"pesan": "data tidak ada"})
+	}
+
 }
 
-// swagger
+// @Summary      Menampilkan sebuah data ToDo
+// @Description  Menampilkan sebuah data ToDo berdasarkan Id yang dimasukkan
+// @Tags         to-do
+// @Accept       json
+// @Produce      json
+// @Param        id   path int  true  "Ambil By Id"
+// @Success      200  {object}  models.Todo
+// @Router       /to-do/{id} [get]
 func AmbilTodo(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	singleTodo, err := AmbilById(id)
+	hasil, err := AmbilById(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"pesan": "data tidak ada"})
 		return
 	}
-	c.JSON(http.StatusOK, singleTodo)
+	c.JSON(http.StatusOK, hasil)
 }
 
 func AmbilById(id int) (*models.Todo, error) {
@@ -45,14 +63,21 @@ func AmbilById(id int) (*models.Todo, error) {
 	return nil, errors.New("data tidak ada")
 }
 
-// swagger
-func BuatTodo(c *gin.Context) {
+// @Summary Menambahkan ToDo Baru
+// @Description Menambahkan satu data ToDo baru
+// @Tags to-do
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.Todo
+// @Param todo body models.Todo true "Buat Todo"
+// @Router /to-do [post]
+func TambahTodo(c *gin.Context) {
 	var (
-		inputTodos InputModels
+		tambahTodo todoModels
 		reqTodos   models.Todo
 	)
 
-	err := c.ShouldBindJSON(&inputTodos)
+	err := c.ShouldBindJSON(&tambahTodo)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": true,
@@ -63,21 +88,29 @@ func BuatTodo(c *gin.Context) {
 	counter++
 	{
 		reqTodos.Id = counter
-		reqTodos.Nama = inputTodos.Nama
-		reqTodos.Complete = inputTodos.Complete
+		reqTodos.Nama = tambahTodo.Nama
+		reqTodos.Selesai = tambahTodo.Selesai
 	}
 	todos = append(todos, reqTodos)
-	c.JSON(http.StatusCreated, inputTodos)
+	c.JSON(http.StatusCreated, tambahTodo)
 }
 
-// swagger
+// @Summary Mengubah ToDo
+// @Description Mengubah ToDo yang sudah ada
+// @Tags to-do
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.Todo
+// @Param id path int true "Ubah ToDo"
+// @Param todo body models.Todo true "minta data json"
+// @Router /to-do/{id} [put]
 func UbahTodo(c *gin.Context) {
 	var (
-		result     gin.H
-		inputTodos InputModels
+		hasil    gin.H
+		ubahTodo todoModels
 	)
-	if err := c.ShouldBindJSON(&inputTodos); err != nil {
-		result = gin.H{
+	if err := c.ShouldBindJSON(&ubahTodo); err != nil {
+		hasil = gin.H{
 			"error": true,
 			"pesan": err,
 		}
@@ -86,27 +119,34 @@ func UbahTodo(c *gin.Context) {
 	id, _ := strconv.Atoi(inputId)
 	for k, v := range todos {
 		if v.Id == id {
-			todos[k].Nama = inputTodos.Nama
-			todos[k].Complete = inputTodos.Complete
-			result = gin.H{
+			todos[k].Nama = ubahTodo.Nama
+			todos[k].Selesai = ubahTodo.Selesai
+			hasil = gin.H{
 				"hasil": todos[k],
 			}
 		}
 	}
-	c.JSON(http.StatusOK, result)
+	c.JSON(http.StatusOK, hasil)
 }
 
-// swagger
+// @Summary Menghapus ToDo
+// @Description Menghapus ToDo yang sudah ada
+// @Tags to-do
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.Todo
+// @Param id path int true "Hapus ToDo"
+// @Router /to-do/{id} [delete]
 func HapusTodo(c *gin.Context) {
-	var result gin.H
+	var hasil gin.H
 	inputId := c.Param("id")
 	id, _ := strconv.Atoi(inputId)
 	id--
 	temp := todos[id]
 	todos = append(todos[:id], todos[id+1:]...)
-	result = gin.H{
-		"todos yang dihapus": temp,
-		"todos baru":         todos,
+	hasil = gin.H{
+		"ToDo yang dihapus": temp,
+		"ToDo baru":         todos,
 	}
-	c.JSON(http.StatusOK, result)
+	c.JSON(http.StatusOK, hasil)
 }
