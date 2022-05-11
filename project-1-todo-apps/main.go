@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/takadev15/todo-apps/controllers"
-	docs "github.com/takadev15/todo-apps/docs"
+	"github.com/afaris01/final-project/project-1-todo-apps/controllers"
+	docs "github.com/afaris01/final-project/project-1-todo-apps/docs"
 )
 
 // @title           ToDo Apps - Rest API

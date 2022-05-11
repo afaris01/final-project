@@ -1,4 +1,4 @@
-module github.com/takadev15/todo-apps
+module github.com/afaris01/final-project/project-1-todo-apps
 
 go 1.18
 

@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/afaris01/final-project/project-1-todo-apps/models"
 	"github.com/gin-gonic/gin"
-	"github.com/takadev15/todo-apps/models"
 )
 
 var (
@@ -15,8 +15,8 @@ var (
 )
 
 type todoModels struct {
-	Id      int    `json:"id"`
-	Nama    string `json:"nama"`
+	Id      int    `json:"Id"`
+	Nama    string `json:"Nama"`
 	Selesai bool   `json:"Selesai"`
 }
 
@@ -27,13 +27,12 @@ type todoModels struct {
 // @Success 200 {array} models.Todo
 // @Router /to-do [get]
 func AmbilAll(c *gin.Context) {
-	if todos != [] {
+	if todos != nil {
 		c.JSON(http.StatusOK, todos)
 		return
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"pesan": "data tidak ada"})
 	}
-
 }
 
 // @Summary      Menampilkan sebuah data ToDo
