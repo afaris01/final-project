@@ -31,7 +31,7 @@ func AmbilAll(c *gin.Context) {
 		c.JSON(http.StatusOK, todos)
 		return
 	} else {
-		c.JSON(http.StatusNotFound, gin.H{"pesan": "data tidak ada"})
+		c.JSON(http.StatusNotFound, gin.H{"Pesan": "Data tidak ada"})
 	}
 }
 
